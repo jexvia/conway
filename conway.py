@@ -7,11 +7,9 @@ import matplotlib.patches as patches
 import tools
 
 def display_cells(arr, ax):
-    nrows, ncols = arr.shape
-    for i in xrange(nrows):
-        for j in xrange(ncols):
-            if arr[i, j]:
-                ax.add_patch(patches.Rectangle((j, i), 1, 1, facecolor='black'))
+    ax.imshow(arr, cmap='Greys', interpolation='None')
+
+def setup_ax(ax, nrows, ncols):
     ax.grid(True)
     ax.set_aspect('equal')
     ax.set_xlim(0, ncols)
@@ -22,20 +20,19 @@ def display_cells(arr, ax):
     ax.set_yticklabels([])
 
 def show(arr, ax, pause=.2):
+    setup_ax(ax, *arr.shape)
     display_cells(arr, ax)
     plt.show(block=False)
     plt.pause(pause)
-    plt.close()
+    plt.cla()
 
 def main():
     arr = np.zeros((100, 100))
-    print tools.glider(90, 10)
-    print tools.blinker(40, 80)
     arr[tools.glider(90, 10)] = 1
     arr[tools.blinker(40, 80)] = 1
     plt.rc('grid', linestyle="-", color='grey')
+    fig, ax = plt.subplots(facecolor='white')
     while True:
-        fig, ax = plt.subplots(facecolor='white')
         show(arr, ax)
         arr = tools.step(arr)
 
